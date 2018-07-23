@@ -9,14 +9,6 @@ function plugin (fastify, options, next) {
 
     fastify.decorateRequest('oauth', oauth);
 
-    if(!fastify.hasContentTypeParser('application/x-www-form-urlencoded')){
-        fastify.addContentTypeParser(
-            'application/x-www-form-urlencoded',
-            {parseAs: 'buffer', bodyLimit: opts.bodyLimit},
-            contentParser
-        );
-    }
-
     function oauth(request, reply, next){
         if(next === undefined){
             oauthServer.authenticate()(request.raw, reply.res, () => {
@@ -25,10 +17,6 @@ function plugin (fastify, options, next) {
         }else{
             oauthServer.authenticate({skipResponse: true})(request.raw, reply.res, next);
         }
-    }
-
-    function contentParser (req, body, done) {
-        done(null, qs.parse(body.toString()));
     }
 
     fastify.post(prefix+'/authorize', (req, reply) => {
@@ -53,5 +41,6 @@ function plugin (fastify, options, next) {
 
 module.exports = fp(plugin, {
     fastify: '>= 0.39.0',
-    name: 'fastify-oauth-server'
+    name: 'fastify-oauth-server',
+    dependencies: ['fastify-formbody']
 });

@@ -33,6 +33,7 @@
     "co-mocha": "^1.1.0",
     "co-supertest": "0.0.8",
     "fastify": "^1.8.0",
+    "fastify-formbody": "^2.0.1",
     "jshint": "^2.8.0",
     "mocha": "^2.0.1",
     "request": "^2.87.0",

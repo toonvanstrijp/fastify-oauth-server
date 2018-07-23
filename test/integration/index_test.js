@@ -26,12 +26,15 @@ describe('FastifyOAuthServer', function() {
 
     beforeEach(function() {
         app = fastify();
+        app.register(require('fastify-formbody'))
         app.register(require('../../'), {prefix: '/oauth', model: {}});
     });
 
     describe('authenticate()', function() {
         it('should return an error if `model` is empty', function(done) {
             app = fastify();
+
+            app.register(require('fastify-formbody'))
 
             app.register(require('../../'), {prefix: '/oauth', model: {}});
 
@@ -48,6 +51,9 @@ describe('FastifyOAuthServer', function() {
 
         it('should authenticate the request', function(done) {
             app = fastify();
+
+            app.register(require('fastify-formbody'))
+
             var tokenExpires = new Date();
             tokenExpires.setDate(tokenExpires.getDate() + 1);
 
@@ -73,6 +79,9 @@ describe('FastifyOAuthServer', function() {
 
         it('should authenticate the request with middleware', function(done) {
             app = fastify();
+
+            app.register(require('fastify-formbody'))
+
             var tokenExpires = new Date();
             tokenExpires.setDate(tokenExpires.getDate() + 1);
 
@@ -100,6 +109,9 @@ describe('FastifyOAuthServer', function() {
 
         it('should unauthorized the request with middleware', function(done) {
             app = fastify();
+
+            app.register(require('fastify-formbody'))
+
             var tokenExpires = new Date();
             tokenExpires.setDate(tokenExpires.getDate() - 60000);
 
@@ -125,6 +137,9 @@ describe('FastifyOAuthServer', function() {
 
         it('should unauthorized the request with middleware custom response', function(done) {
             app = fastify();
+
+            app.register(require('fastify-formbody'))
+
             var tokenExpires = new Date();
             tokenExpires.setDate(tokenExpires.getDate() + 60000);
 
@@ -155,6 +170,9 @@ describe('FastifyOAuthServer', function() {
     describe('authorize()', function() {
         it('should return an error', function(done) {
             app = fastify();
+
+            app.register(require('fastify-formbody'));
+
             var model = {
                 getAccessToken: function() {
                     return { user: {}, accessTokenExpiresAt: new Date() };
@@ -183,6 +201,9 @@ describe('FastifyOAuthServer', function() {
 
         it('should return a `location` header with the code', function(done) {
             app = fastify();
+
+            app.register(require('fastify-formbody'))
+
             var model = {
                 getAccessToken: function() {
                     return { user: {}, accessTokenExpiresAt: new Date().setDate(new Date().getTime() + 60 * 60 * 1000) };
@@ -208,6 +229,8 @@ describe('FastifyOAuthServer', function() {
         it('should return an error if `model` is empty', function(done) {
             app = fastify();
 
+            app.register(require('fastify-formbody'))
+
             app.register(require('../../'), {prefix: '/oauth', model: {}});
 
             request(listen())
@@ -220,6 +243,9 @@ describe('FastifyOAuthServer', function() {
     describe('token()', function() {
         it('should return an `access_token`', function(done) {
             app = fastify();
+
+            app.register(require('fastify-formbody'))
+
             var model = {
                 getClient: function() {
                     return { grants: ['password'] };
