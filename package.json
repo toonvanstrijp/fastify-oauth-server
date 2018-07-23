@@ -1,0 +1,46 @@
+{
+  "name": "fastify-oauth-server",
+  "description": "OAuth provider for Fasitfy",
+  "version": "2.0.0",
+  "main": "index.js",
+  "scripts": {
+    "lint": "jshint .",
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha 'test/**/*.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/toonvanstrijp/fastify-oauth-server"
+  },
+  "keywords": [
+    "fastify",
+    "oauth",
+    "oauth2"
+  ],
+  "author": {
+    "name": "Toon van Strijp",
+    "email": "hello@toonvanstrijp.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "co": "^4.5.1",
+    "fastify-plugin": "^1.2.0",
+    "oauth2-server": "seegno-forks/node-oauth2-server#enhancement/refactor-project",
+    "qs": "^6.5.2",
+    "querystring": "^0.2.0",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "co-mocha": "^1.1.0",
+    "co-supertest": "0.0.8",
+    "fastify": "^1.8.0",
+    "jshint": "^2.8.0",
+    "mocha": "^2.0.1",
+    "request": "^2.87.0",
+    "should": "^4.4.1",
+    "sinon": "^1.14.1",
+    "supertest": "^0.15.0"
+  },
+  "engines": {
+    "node": ">=0.11"
+  }
+}
