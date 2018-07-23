@@ -41,6 +41,5 @@ function plugin (fastify, options, next) {
 
 module.exports = fp(plugin, {
     fastify: '>= 0.39.0',
-    name: 'fastify-oauth-server',
-    dependencies: ['fastify-formbody']
+    name: 'fastify-oauth-server'
 });
