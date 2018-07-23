@@ -34,7 +34,7 @@ app.register(oauthserver, {
     debug: true
 });
 
-app.get(function(req, res){
+app.get('/', function(req, res){
     req.oauth(req, res, function(err, authenticated) {
       if(err){
           res.code(401).send('unauthenticated!');
