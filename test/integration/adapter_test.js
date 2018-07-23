@@ -251,7 +251,7 @@ describe('Adapter FastifyOAuthServer', function() {
             request(listen())
                 .post('/')
                 .send('client_id=foo&client_secret=bar&grant_type=password&username=qux&password=biz')
-                .expect({ access_token: 'foobar', token_type: 'Bearer' })
+                .expect({ access_token: 'foobar', token_type: 'bearer' })
                 .expect(200, function(err, res){
                     spy.called.should.equal(true);
                     done(err);
@@ -277,7 +277,7 @@ describe('Adapter FastifyOAuthServer', function() {
             request(listen())
                 .post('/')
                 .send('client_id=foo&client_secret=bar&grant_type=password&username=qux&password=biz')
-                .expect({ access_token: 'foobar', token_type: 'Bearer' })
+                .expect({ access_token: 'foobar', token_type: 'bearer' })
                 .end(done);
         });
 
@@ -300,7 +300,7 @@ describe('Adapter FastifyOAuthServer', function() {
             request(listen())
                 .post('/')
                 .send('client_id=foo&client_secret=bar&grant_type=password&username=qux&password=biz')
-                .expect({ access_token: 'foobar', refresh_token: 'foobiz', token_type: 'Bearer' })
+                .expect({ access_token: 'foobar', refresh_token: 'foobiz', token_type: 'bearer' })
                 .end(done);
         });
 
