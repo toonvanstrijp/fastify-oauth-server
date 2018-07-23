@@ -1,4 +1,4 @@
-# Fastify OAuth Server [![Build Status](https://travis-ci.org/ToonvanStrijp/fastify-oauth-server.svg?branch=master)](https://travis-ci.org/thomseddon/koa-oauth-server)
+# Fastify OAuth Server [![Build Status](https://travis-ci.org/ToonvanStrijp/fastify-oauth-server.svg?branch=master)](https://travis-ci.org/ToonvanStrijp/fastify-oauth-server)
 
 Complete, compliant and well tested module for implementing an OAuth2 Server/Provider with [fastify](https://github.com/fastify/fastify) in [node.js](http://nodejs.org/).
 
