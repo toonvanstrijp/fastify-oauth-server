@@ -107,9 +107,9 @@ FasitfyOAuthServer.prototype.authorize = function(options) {
                 }
                 return this.server.authorize(request, response, options);
             })
-            .tap(function() {
+            .tap(function(code) {
                 if(options && options.hasOwnProperty('skipResponse') && options.skipResponse){
-                    next(null, true);
+                    next(null, code);
                 }else if(this.continueMiddleware){
                     next();
                 }
@@ -161,9 +161,9 @@ FasitfyOAuthServer.prototype.token = function(options) {
                 }
                 return this.server.token(request, response, options);
             })
-            .tap(function() {
+            .tap(function(token) {
                 if(options && options.hasOwnProperty('skipResponse') && options.skipResponse){
-                    next(null, true);
+                    next(null, token);
                 }else if(this.continueMiddleware){
                     next();
                 }
