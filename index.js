@@ -1,40 +1,55 @@
 const FastifyOAuthServer = require('./oauthServer');
-const qs = require('qs');
 const fp = require('fastify-plugin');
 
 function plugin (fastify, options, next) {
-    const opts = Object.assign({prefix: '/oauth'}, options || {});
+    const opts = Object.assign({}, options || {});
     const oauthServer = new FastifyOAuthServer(opts);
-    const prefix = opts.prefix === null || opts.prefix === undefined ? '' : opts.prefix;
 
-    fastify.decorateRequest('oauth', oauth);
+    fastify.decorateRequest('oauth', {
+        authenticate: authenticate,
+        authorize: authorize,
+        token: token,
+    });
 
-    function oauth(request, reply, next){
-        if(next === undefined){
-            oauthServer.authenticate()(request.raw, reply.res, () => {
-                reply.res.end();
+    function authenticate(req, reply){
+        return new Promise((resolve, reject) => {
+            oauthServer.authenticate({skipResponse: true})(req.raw, reply.res, function (err, authenticated) {
+               if(err){
+                   reject(err);
+               }else{
+                   resolve(authenticated);
+               }
             });
-        }else{
-            oauthServer.authenticate({skipResponse: true})(request.raw, reply.res, next);
-        }
+        });
     }
 
-    fastify.post(prefix+'/authorize', (req, reply) => {
-        req.raw.query = req.query;
-        req.raw.body = req.body;
-        oauthServer.authorize()(req.raw, reply.res, () => {
-            reply.res.end();
+    function authorize(req, reply){
+        return new Promise((resolve, reject) => {
+            req.raw.query = req.query;
+            req.raw.body = req.body;
+            oauthServer.authorize({skipResponse: true})(req.raw, reply.res, function (err, authenticated) {
+                if(err){
+                    reject(err);
+                }else{
+                    resolve(authenticated);
+                }
+            });
         });
-    });
+    }
 
-    fastify.post(prefix+'/token', (req, reply) => {
-        req.raw.query = req.query;
-        req.raw.body = req.body;
-
-        oauthServer.token()(req.raw, reply.res, () => {
-            reply.res.end();
+    function token(req, reply){
+        return new Promise((resolve, reject) => {
+            req.raw.query = req.query;
+            req.raw.body = req.body;
+            oauthServer.token({skipResponse: true})(req.raw, reply.res, function (err, authenticated) {
+                if(err){
+                    reject(err);
+                }else{
+                    resolve(authenticated);
+                }
+            });
         });
-    });
+    }
 
     next();
 }

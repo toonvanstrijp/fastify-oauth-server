@@ -52,16 +52,18 @@ FasitfyOAuthServer.prototype.authenticate = function(options) {
             .then(function() {
                 return this.server.authenticate(request, response, options);
             })
-            .tap(function(token) {
-                res.locals = res.hasOwnProperty('locals') ? res.locals : {};
-                res.locals.oauth = { token: token };
+            .tap(function() {
                 if(options && options.hasOwnProperty('skipResponse') && options.skipResponse){
                     next(null, true);
-                }else{
+                }else if(this.continueMiddleware){
                     next();
                 }
             })
+            .then(function() {
+                return handleResponse.call(this, req, res, response);
+            })
             .catch(function(e) {
+                console.log(e);
                 if(options && options.hasOwnProperty('skipResponse') && options.skipResponse){
                     next(e, false);
                 }else{
@@ -105,10 +107,10 @@ FasitfyOAuthServer.prototype.authorize = function(options) {
                 }
                 return this.server.authorize(request, response, options);
             })
-            .tap(function(code) {
-                res.locals = res.hasOwnProperty('locals') ? res.locals : {};
-                res.locals.oauth = { code: code };
-                if (this.continueMiddleware) {
+            .tap(function() {
+                if(options && options.hasOwnProperty('skipResponse') && options.skipResponse){
+                    next(null, true);
+                }else if(this.continueMiddleware){
                     next();
                 }
             })
@@ -116,7 +118,11 @@ FasitfyOAuthServer.prototype.authorize = function(options) {
                 return handleResponse.call(this, req, res, response);
             })
             .catch(function(e) {
-                return handleError.call(this, e, req, res, response, next);
+                if(options && options.hasOwnProperty('skipResponse') && options.skipResponse){
+                    next(e, false);
+                }else{
+                    return handleError.call(this, e, req, res, null, next);
+                }
             });
     };
 };
@@ -155,10 +161,10 @@ FasitfyOAuthServer.prototype.token = function(options) {
                 }
                 return this.server.token(request, response, options);
             })
-            .tap(function(token) {
-                res.locals = res.hasOwnProperty('locals') ? res.locals : {};
-                res.locals.oauth = { token: token };
-                if (this.continueMiddleware) {
+            .tap(function() {
+                if(options && options.hasOwnProperty('skipResponse') && options.skipResponse){
+                    next(null, true);
+                }else if(this.continueMiddleware){
                     next();
                 }
             })
@@ -166,7 +172,11 @@ FasitfyOAuthServer.prototype.token = function(options) {
                 return handleResponse.call(this, req, res, response);
             })
             .catch(function(e) {
-                return handleError.call(this, e, req, res, response, next);
+                if(options && options.hasOwnProperty('skipResponse') && options.skipResponse){
+                    next(e, false);
+                }else{
+                    return handleError.call(this, e, req, res, null, next);
+                }
             });
     };
 };

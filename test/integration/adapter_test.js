@@ -67,7 +67,7 @@ describe('Adapter FastifyOAuthServer', function() {
 
         it('should authenticate the request', function(done) {
             var tokenExpires = new Date();
-            tokenExpires.setDate(tokenExpires.getDate() + 1);
+            tokenExpires.setDate(tokenExpires.getDate() + 60 * 1000);
 
             var token = { user: {}, accessTokenExpiresAt: tokenExpires };
             var model = {
@@ -91,80 +91,14 @@ describe('Adapter FastifyOAuthServer', function() {
                 .expect(200)
                 .end(done);
         });
-
-        it('should cache the authorization token', function(done) {
-            var tokenExpires = new Date();
-            tokenExpires.setDate(tokenExpires.getDate() + 1);
-            var token = { user: {}, accessTokenExpiresAt: tokenExpires };
-            var model = {
-                getAccessToken: function() {
-                    return token;
-                }
-            };
-            var oauth = new FastifyOAuthServer({ model: model });
-
-            app.use(oauth.authenticate());
-
-            var spy = sinon.spy(function(req, res, next) {
-                res.locals.oauth.token.should.equal(token);
-                res.write(JSON.stringify(token));
-                res.end();
-                next();
-            });
-
-            app.use(spy);
-
-            request(listen())
-                .get('/')
-                .set('Authorization', 'Bearer foobar')
-                .expect(200, function(err, res){
-                    spy.called.should.equal(true);
-                    done(err);
-                });
-        });
     });
 
     describe('authorize()', function() {
-        it('should cache the authorization code', function(done) {
-            var tokenExpires = new Date();
-            tokenExpires.setDate(tokenExpires.getDate() + 1);
-
-            var code = { authorizationCode: 123 };
-            var model = {
-                getAccessToken: function() {
-                    return { user: {}, accessTokenExpiresAt: tokenExpires };
-                },
-                getClient: function() {
-                    return { grants: ['authorization_code'], redirectUris: ['http://example.com'] };
-                },
-                saveAuthorizationCode: function() {
-                    return code;
-                }
-            };
-            var oauth = new FastifyOAuthServer({ model: model, continueMiddleware: true });
-
-            app.use(oauth.authorize());
-
-            var spy = sinon.spy(function(req, res, next) {
-                res.locals.oauth.code.should.equal(code);
-                next();
-            });
-            app.use(spy);
-
-            request(listen())
-                .post('/?state=foobiz')
-                .set('Authorization', 'Bearer foobar')
-                .send({ client_id: 12345, response_type: 'code' })
-                .expect(302, function(err, res){
-                    spy.called.should.equal(true);
-                    done(err);
-                });
-        });
 
         it('should return an error', function(done) {
             var model = {
                 getAccessToken: function() {
-                    return { user: {}, accessTokenExpiresAt: new Date() };
+                    return { user: {}, accessTokenExpiresAt: new Date().setDate(new Date().getTime() + 60 * 60 * 1000) };
                 },
                 getClient: function() {
                     return { grants: ['authorization_code'], redirectUris: ['http://example.com'] };
@@ -191,7 +125,7 @@ describe('Adapter FastifyOAuthServer', function() {
         it('should return a `location` header with the code', function(done) {
             var model = {
                 getAccessToken: function() {
-                    return { user: {}, accessTokenExpiresAt: new Date() };
+                    return { user: {}, accessTokenExpiresAt:new Date().setDate(new Date().getTime() + 60 * 60 * 1000) };
                 },
                 getClient: function() {
                     return { grants: ['authorization_code'], redirectUris: ['http://example.com'] };
@@ -200,6 +134,7 @@ describe('Adapter FastifyOAuthServer', function() {
                     return { authorizationCode: 123 };
                 }
             };
+
             var oauth = new FastifyOAuthServer({ model: model });
 
             app.use(oauth.authorize());
@@ -225,38 +160,6 @@ describe('Adapter FastifyOAuthServer', function() {
     });
 
     describe('token()', function() {
-        it('should cache the authorization token', function(done) {
-            var token = { accessToken: 'foobar', client: {}, user: {} };
-            var model = {
-                getClient: function() {
-                    return { grants: ['password'] };
-                },
-                getUser: function() {
-                    return {};
-                },
-                saveToken: function() {
-                    return token;
-                }
-            };
-            var oauth = new FastifyOAuthServer({ model: model, continueMiddleware: true });
-
-            app.use(oauth.token());
-            var spy = sinon.spy(function(req, res, next) {
-                res.locals.oauth.token.should.equal(token);
-
-                next();
-            });
-            app.use(spy);
-
-            request(listen())
-                .post('/')
-                .send('client_id=foo&client_secret=bar&grant_type=password&username=qux&password=biz')
-                .expect({ access_token: 'foobar', token_type: 'bearer' })
-                .expect(200, function(err, res){
-                    spy.called.should.equal(true);
-                    done(err);
-                });
-        });
 
         it('should return an `access_token`', function(done) {
             var model = {
