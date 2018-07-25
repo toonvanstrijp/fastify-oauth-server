@@ -96,9 +96,12 @@ describe('Adapter FastifyOAuthServer', function() {
     describe('authorize()', function() {
 
         it('should return an error', function(done) {
+            var tokenExpires = new Date();
+            tokenExpires.setDate(tokenExpires.getDate() + 60 * 1000);
+
             var model = {
                 getAccessToken: function() {
-                    return { user: {}, accessTokenExpiresAt: new Date().setDate(new Date().getTime() + 60 * 60 * 1000) };
+                    return { user: {}, accessTokenExpiresAt: tokenExpires };
                 },
                 getClient: function() {
                     return { grants: ['authorization_code'], redirectUris: ['http://example.com'] };
@@ -123,9 +126,12 @@ describe('Adapter FastifyOAuthServer', function() {
         });
 
         it('should return a `location` header with the code', function(done) {
+            var tokenExpires = new Date();
+            tokenExpires.setDate(tokenExpires.getDate() + 60 * 1000);
+
             var model = {
                 getAccessToken: function() {
-                    return { user: {}, accessTokenExpiresAt:new Date().setDate(new Date().getTime() + 60 * 60 * 1000) };
+                    return { user: {}, accessTokenExpiresAt: tokenExpires };
                 },
                 getClient: function() {
                     return { grants: ['authorization_code'], redirectUris: ['http://example.com'] };
@@ -180,7 +186,7 @@ describe('Adapter FastifyOAuthServer', function() {
             request(listen())
                 .post('/')
                 .send('client_id=foo&client_secret=bar&grant_type=password&username=qux&password=biz')
-                .expect({ access_token: 'foobar', token_type: 'bearer' })
+                .expect({ access_token: 'foobar', token_type: 'Bearer' })
                 .end(done);
         });
 
@@ -203,7 +209,7 @@ describe('Adapter FastifyOAuthServer', function() {
             request(listen())
                 .post('/')
                 .send('client_id=foo&client_secret=bar&grant_type=password&username=qux&password=biz')
-                .expect({ access_token: 'foobar', refresh_token: 'foobiz', token_type: 'bearer' })
+                .expect({ access_token: 'foobar', refresh_token: 'foobiz', token_type: 'Bearer' })
                 .end(done);
         });
 

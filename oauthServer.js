@@ -211,7 +211,7 @@ var handleResponse = function(req, res, response) {
  */
 
 var handleError = function(e, req, res, response, next) {
-
+    console.log(e);
     if (this.useErrorHandler === true) {
         next(e);
     } else {
