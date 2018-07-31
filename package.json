@@ -1,7 +1,7 @@
 {
   "name": "fastify-oauth-server",
   "description": "OAuth provider for Fasitfy",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "main": "index.js",
   "scripts": {
     "lint": "jshint .",
