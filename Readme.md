@@ -12,12 +12,6 @@ This is the fastify wrapper for [oauth2-server](https://github.com/thomseddon/no
 
 The module provides one decorator - `oauth`.
 
-`prefix` (default `/oauth`) is used within the plugin to create a prefix for the required routes:
-
-`POST - /oauth/authorize`
-
-`POST - /oauth/token`
-
 Use the decorator to get the authentication state.
 
 ```js
