@@ -60,7 +60,9 @@ FasitfyOAuthServer.prototype.authenticate = function(options) {
                 }
             })
             .then(function() {
-                return handleResponse.call(this, req, res, response);
+                if (!options || (!options.hasOwnProperty('skipResponse') && !options.skipRespons)) {
+                    return handleResponse.call(this, req, res, response);
+                }
             })
             .catch(function(e) {
                 console.log(e);
@@ -115,7 +117,9 @@ FasitfyOAuthServer.prototype.authorize = function(options) {
                 }
             })
             .then(function() {
-                return handleResponse.call(this, req, res, response);
+                if (!options || (!options.hasOwnProperty('skipResponse') && !options.skipRespons)) {
+                    return handleResponse.call(this, req, res, response);
+                }
             })
             .catch(function(e) {
                 if(options && options.hasOwnProperty('skipResponse') && options.skipResponse){
@@ -169,7 +173,9 @@ FasitfyOAuthServer.prototype.token = function(options) {
                 }
             })
             .then(function() {
-                return handleResponse.call(this, req, res, response);
+                if (!options || (!options.hasOwnProperty('skipResponse') && !options.skipRespons)) {
+                    return handleResponse.call(this, req, res, response);
+                }
             })
             .catch(function(e) {
                 if(options && options.hasOwnProperty('skipResponse') && options.skipResponse){
