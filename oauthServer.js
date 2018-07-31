@@ -52,9 +52,9 @@ FasitfyOAuthServer.prototype.authenticate = function(options) {
             .then(function() {
                 return this.server.authenticate(request, response, options);
             })
-            .tap(function() {
+            .tap(function(token) {
                 if(options && options.hasOwnProperty('skipResponse') && options.skipResponse){
-                    next(null, true);
+                    next(null, token);
                 }else if(this.continueMiddleware){
                     next();
                 }
