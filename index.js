@@ -5,11 +5,16 @@ function plugin (fastify, options, next) {
     const opts = Object.assign({}, options || {});
     const oauthServer = new FastifyOAuthServer(opts);
 
-    fastify.decorateRequest('oauth', {
-        authenticate: authenticate,
-        authorize: authorize,
-        token: token,
-    });
+    fastify.decorateRequest('oauth', null)
+
+    fastify.addHook('onRequest', (req, reply, done) => {
+        req.oauth = {
+            authenticate: authenticate,
+            authorize: authorize,
+            token: token,
+        }
+        done()
+    })
 
     function authenticate(req, reply){
         return new Promise((resolve, reject) => {
